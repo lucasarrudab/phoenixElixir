@@ -52,7 +52,8 @@ defmodule PhoenixAv3Web.TransactionController do
       valor: Decimal.to_string(t.valor),
       tipo: t.tipo,
       inserted_at: t.inserted_at,
-      updated_at: t.updated_at
+      updated_at: t.updated_at,
+      user_id: t.user_id,
     }
   end
 end

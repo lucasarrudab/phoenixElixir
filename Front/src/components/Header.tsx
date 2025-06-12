@@ -1,5 +1,4 @@
 import React from 'react';
-import { Users, Banknote, Tag } from 'lucide-react';
 import { ViewType } from '../types';
 
 interface HeaderProps {
@@ -20,19 +19,7 @@ const Header: React.FC<HeaderProps> = ({ viewAtual, setViewAtual }) => {
                   ? 'bg-purple-700 text-white'
                   : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
             >
-              <Users size={18} className="mr-1.5" />
               <span className="hidden md:inline">Usuários</span>
-            </button>
-
-            <button
-              onClick={() => setViewAtual(ViewType.TRANSACAO)}
-              className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 
-                ${viewAtual === ViewType.TRANSACAO
-                  ? 'bg-purple-700 text-white'
-                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-            >
-              <Banknote size={18} className="mr-1.5" />
-              <span className="hidden md:inline">Transações</span>
             </button>
 
             <button
@@ -42,7 +29,6 @@ const Header: React.FC<HeaderProps> = ({ viewAtual, setViewAtual }) => {
                   ? 'bg-purple-700 text-white'
                   : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
             >
-              <Tag size={18} className="mr-1.5" />
               <span className="hidden md:inline">Tags</span>
             </button>
           </nav>

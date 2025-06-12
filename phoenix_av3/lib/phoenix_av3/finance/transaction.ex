@@ -15,8 +15,9 @@ defmodule PhoenixAv3.Finance.Transaction do
   @doc false
   def changeset(transaction, attrs) do
     transaction
-    |> cast(attrs, [:descricao, :valor, :tipo, :data])
-    |> validate_required([:descricao, :valor, :tipo, :data])
+  |> cast(attrs, [:data, :descricao, :valor, :tipo, :user_id])
+  |> validate_required([:data, :descricao, :valor, :tipo, :user_id])
+  |> assoc_constraint(:user)
   end
 
 end

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Dialog from './Dialog';
-import { Transacao, Tag } from '../types';
+import { Transacao, Tag, Usuario } from '../types';
 import { criarTransacao, atualizarTransacao } from '../services/transacaoService';
 import { getTags } from '../services/tagService';
+import { getUsuarios } from '../services/usuarioService';
 
 interface TransactionDialogProps {
   isOpen: boolean;
@@ -23,30 +24,36 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
     valor: '',
     descricao: '',
     tipo: 'entrada',
-    user_id: userId || 1,
+    user_id: userId,
     tag_ids: [] as number[],
   });
-
+console.log("Valor de userId:", userId);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+  const [availableUsers, setAvailableUsers] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchTags = async () => {
+    const fetchData = async () => {
       if (isOpen) {
         try {
           setLoading(true);
-          const tags = await getTags();
+          const [tags, users] = await Promise.all([
+            getTags(),
+            getUsuarios()
+          ]);
           setAvailableTags(tags);
+          setAvailableUsers(users);
         } catch (error) {
-          console.error('Erro ao carregar tags:', error);
+          console.error('Erro ao carregar dados:', error);
           setAvailableTags([]);
+          setAvailableUsers([]);
         } finally {
           setLoading(false);
         }
       }
     };
 
-    fetchTags();
+    fetchData();
   }, [isOpen]);
 
   useEffect(() => {
@@ -63,7 +70,7 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
         valor: '',
         descricao: '',
         tipo: 'entrada',
-        user_id: userId || 1,
+        user_id: userId,
         tag_ids: [],
       });
     }
@@ -104,6 +111,13 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
       } else {
         await criarTransacao(transacaoData);
       }
+      setFormData({
+      valor: '',
+      descricao: '',
+      tipo: 'entrada',
+      user_id: userId,
+      tag_ids: [],
+    });
       onSuccess();
       onClose();
     } catch (error) {
@@ -114,6 +128,11 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
     }
   };
 
+  const getUserName = (userId?: number) => {
+    const user = availableUsers.find(u => u.id === userId);
+    return user ? user.nome : "";
+  };
+
   return (
     <Dialog
       isOpen={isOpen}
@@ -121,6 +140,15 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
       title={transacao ? 'Editar Transação' : 'Nova Transação'}
     >
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Usuário
+          </label>
+            <p className="bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white">
+             {getUserName(formData.user_id) || 'Usuário não encontrado'}
+           </p>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-1">
             Valor
@@ -171,12 +199,7 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
             Tags
           </label>
           <div className="max-h-32 overflow-y-auto space-y-2 bg-gray-700 rounded-md p-3">
-            {loading ? (
-              <p className="text-gray-400 text-sm">Carregando tags...</p>
-            ) : availableTags.length === 0 ? (
-              <p className="text-gray-400 text-sm">Nenhuma tag disponível</p>
-            ) : (
-              availableTags.map((tag) => (
+              {availableTags.map((tag) => (
                 <label key={tag.id} className="flex items-center cursor-pointer hover:bg-gray-600 p-1 rounded">
                   <input
                     type="checkbox"
@@ -187,8 +210,7 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
                   />
                   <span className="text-sm text-gray-300">{tag.nome}</span>
                 </label>
-              ))
-            )}
+              ))}
           </div>
         </div>
 
@@ -206,7 +228,7 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
             className="px-4 py-2 text-sm font-medium bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors disabled:opacity-50"
             disabled={loading}
           >
-            {loading ? 'Salvando...' : (transacao ? 'Salvar' : 'Criar')}
+            {transacao ? 'Salvar' : 'Criar'}
           </button>
         </div>
       </form>

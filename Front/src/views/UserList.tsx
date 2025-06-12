@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getUsuarios, deletarUsuario } from '../services/usuarioService';
 import { getTransacoesByUser } from '../services/transacaoService';
 import { Usuario, Transacao } from '../types';
-import { User, Mail, Calendar, ChevronDown, ChevronRight, Banknote, Tag as TagIcon, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
+import { User, Calendar, ChevronDown, ChevronRight, Tag as TagIcon, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import UserDialog from '../components/UserDialog';
 import TransactionDialog from '../components/TransactionDialog';
 
@@ -127,7 +127,7 @@ const UserList: React.FC = () => {
       </div>
     );
   }
-
+console.log(usuarios);
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -151,7 +151,6 @@ const UserList: React.FC = () => {
               key={usuario.id}
               className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-purple-900/20 transition-all duration-200"
             >
-              {/* User Header */}
               <div className="p-5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center flex-1">
@@ -173,7 +172,6 @@ const UserList: React.FC = () => {
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-white">{usuario.nome}</h3>
                       <div className="flex items-center text-gray-400 text-sm">
-                        <Mail size={14} className="mr-1" />
                         <span>{usuario.email}</span>
                       </div>
                       {usuario.inserted_at && (
@@ -202,13 +200,11 @@ const UserList: React.FC = () => {
                 </div>
               </div>
 
-              {/* User Transactions */}
               {expandedUsers.has(usuario.id) && (
                 <div className="border-t border-gray-700 bg-gray-750">
                   <div className="p-5">
                     <div className="flex justify-between items-center mb-4">
                       <h4 className="text-md font-medium text-white flex items-center">
-                        <Banknote size={16} className="mr-2" />
                         Transações do {usuario.nome}
                       </h4>
                       <button

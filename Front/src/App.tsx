@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Header from './components/Header';
 import UserList from './views/UserList';
-import TransactionList from './views/TransactionList';
 import TagList from './views/TagList';
 import { ViewType } from './types';
 
@@ -12,8 +11,6 @@ function App() {
     switch (viewAtual) {
       case ViewType.USUARIO:
         return <UserList />;
-      case ViewType.TRANSACAO:
-        return <TransactionList />;
       case ViewType.TAG:
         return <TagList />;
       default:
