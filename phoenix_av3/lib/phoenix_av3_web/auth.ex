@@ -8,7 +8,6 @@ defmodule PhoenixAv3Web.Auth do
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
          signer <- Signer.create("HS256", "ADSUHHUD1273FHSUD3H222R7FSDBYF237V"),
          {:ok, claims} <- PhoenixAv3Web.Token.verify_and_validate(token, signer) do
-      # Se token válido, adiciona o ID do usuário nos assigns
       assign(conn, :current_user_id, claims["sub"])
     else
       _ ->
