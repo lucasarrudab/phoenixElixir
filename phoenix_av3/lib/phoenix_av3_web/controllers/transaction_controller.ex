@@ -45,15 +45,21 @@ defmodule PhoenixAv3Web.TransactionController do
   end
 
   defp serialize_transaction(t) do
-    %{
-      id: t.id,
-      data: t.data,
-      descricao: t.descricao,
-      valor: Decimal.to_string(t.valor),
-      tipo: t.tipo,
-      inserted_at: t.inserted_at,
-      updated_at: t.updated_at,
-      user_id: t.user_id,
+  %{
+    id: t.id,
+    data: t.data,
+    descricao: t.descricao,
+    valor: Decimal.to_string(t.valor),
+    tipo: t.tipo,
+    inserted_at: t.inserted_at,
+    updated_at: t.updated_at,
+    user_id: t.user_id,
+    tags: Enum.map(t.tags || [], fn tag ->
+        %{
+        id: tag.id,
+        nome: tag.nome
+        }
+      end)
     }
   end
 end

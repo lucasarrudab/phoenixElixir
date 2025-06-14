@@ -14,6 +14,11 @@ defmodule PhoenixAv3Web.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :api_protected do
+  plug :accepts, ["json"]
+  plug PhoenixAv3Web.Auth
+  end
+
   scope "/", PhoenixAv3Web do
     pipe_through :browser
 
@@ -23,11 +28,18 @@ defmodule PhoenixAv3Web.Router do
   # Other scopes may use custom stacks.
   scope "/api", PhoenixAv3Web do
     pipe_through :api
+
+    options "/*path", PhoenixAv3Web.OptionsController, :options
+    post "/auth/login", AuthController, :login
+    post "/auth/register", AuthController, :register
+  end
+
+  scope "/api", PhoenixAv3Web do
+    pipe_through :api_protected
+
     resources "/users", UserController, except: [:new, :edit]
     resources "/tags", TagController, except: [:new, :edit]
     resources "/transactions", TransactionController, except: [:new, :edit]
-
-    options "/*path", PhoenixAv3Web.OptionsController, :options
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

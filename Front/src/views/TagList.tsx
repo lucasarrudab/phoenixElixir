@@ -18,8 +18,7 @@ const TagList: React.FC = () => {
       setTags(data);
       setErro(null);
     } catch (error) {
-      setErro('Erro ao carregar tags. Tente novamente mais tarde.');
-      console.error('Erro ao buscar tags:', error);
+      console.error('Erro ao buscar tags', error);
     } finally {
       setCarregando(false);
     }

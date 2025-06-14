@@ -22,7 +22,7 @@ const UserDialog: React.FC<UserDialogProps> = ({ isOpen, onClose, onSuccess, usu
       setFormData({
         nome: usuario.nome,
         email: usuario.email,
-        senha: '', // We don't show the existing password
+        senha: '', 
       });
     } else {
       setFormData({
@@ -37,7 +37,6 @@ const UserDialog: React.FC<UserDialogProps> = ({ isOpen, onClose, onSuccess, usu
     e.preventDefault();
     try {
       if (usuario) {
-        // Only include password if it was changed
         const updateData = {
           nome: formData.nome,
           email: formData.email,

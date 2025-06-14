@@ -6,7 +6,7 @@ defmodule PhoenixAv3.Repo.Migrations.CreateTransactionsTags do
       add :transaction_id, references(:transactions, on_delete: :delete_all)
       add :tag_id, references(:tags, on_delete: :delete_all)
 
-      timestamps(type: :utc_datetime)
+      timestamps(type: :utc_datetime, null: true)
     end
 
     create unique_index(:transactions_tags, [:transaction_id, :tag_id])

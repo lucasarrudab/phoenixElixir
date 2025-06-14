@@ -27,7 +27,7 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
     user_id: userId,
     tag_ids: [] as number[],
   });
-console.log("Valor de userId:", userId);
+console.log("userId:", userId);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const [availableUsers, setAvailableUsers] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ console.log("Valor de userId:", userId);
           setAvailableTags(tags);
           setAvailableUsers(users);
         } catch (error) {
-          console.error('Erro ao carregar dados:', error);
+          console.error('Erro com os dados:', error);
           setAvailableTags([]);
           setAvailableUsers([]);
         } finally {
@@ -57,7 +57,7 @@ console.log("Valor de userId:", userId);
   }, [isOpen]);
 
   useEffect(() => {
-    if (transacao) {
+    if (transacao && availableTags.length > 0) {
       setFormData({
         valor: transacao.valor.toString(),
         descricao: transacao.descricao,
@@ -65,7 +65,7 @@ console.log("Valor de userId:", userId);
         user_id: transacao.user_id || userId || 1,
         tag_ids: transacao.tags?.map(tag => tag.id) || [],
       });
-    } else {
+    } else if (!transacao) {
       setFormData({
         valor: '',
         descricao: '',
@@ -74,7 +74,7 @@ console.log("Valor de userId:", userId);
         tag_ids: [],
       });
     }
-  }, [transacao, userId]);
+  }, [transacao, userId, availableTags]);
 
   const handleTagChange = (tagId: number, checked: boolean) => {
     if (checked) {
@@ -104,7 +104,6 @@ console.log("Valor de userId:", userId);
         inserted_at: new Date().toISOString(),
       };
 
-      console.log('Enviando dados da transação:', transacaoData);
 
       if (transacao) {
         await atualizarTransacao(transacao.id, transacaoData);
@@ -121,8 +120,7 @@ console.log("Valor de userId:", userId);
       onSuccess();
       onClose();
     } catch (error) {
-      console.error('Erro ao salvar transação:', error);
-      alert('Erro ao salvar transação. Verifique os dados e tente novamente.');
+      console.error('erro', error);
     } finally {
       setLoading(false);
     }
@@ -132,7 +130,6 @@ console.log("Valor de userId:", userId);
     const user = availableUsers.find(u => u.id === userId);
     return user ? user.nome : "";
   };
-
   return (
     <Dialog
       isOpen={isOpen}

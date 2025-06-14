@@ -41,7 +41,7 @@ const TagDialog: React.FC<TagDialogProps> = ({ isOpen, onClose, onSuccess, tag }
       onClose();
     } catch (error) {
       console.error('Erro ao salvar tag:', error);
-      alert('Erro ao salvar tag. Tente novamente.');
+      alert('Erro ao salvar tag.');
     } finally {
       setLoading(false);
     }

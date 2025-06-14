@@ -114,7 +114,7 @@ defmodule PhoenixAv3.Finance do
 
   """
   def list_transactions do
-    Repo.all(Transaction)
+    Repo.all(Transaction) |> Repo.preload(:tags)
   end
 
   @doc """
@@ -131,7 +131,7 @@ defmodule PhoenixAv3.Finance do
       ** (Ecto.NoResultsError)
 
   """
-  def get_transaction!(id), do: Repo.get!(Transaction, id)
+  def get_transaction!(id), do: Repo.get!(Transaction, id) |> Repo.preload(:tags)
 
   @doc """
   Creates a transaction.
@@ -146,9 +146,10 @@ defmodule PhoenixAv3.Finance do
 
   """
   def create_transaction(attrs \\ %{}) do
-    %Transaction{}
-    |> Transaction.changeset(attrs)
-    |> Repo.insert()
+  %Transaction{}
+  |> Transaction.changeset(attrs)
+  |> Ecto.Changeset.put_assoc(:tags, get_tags_from_ids(attrs["tag_ids"]))
+  |> Repo.insert()
   end
 
   @doc """
@@ -163,11 +164,18 @@ defmodule PhoenixAv3.Finance do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_transaction(%Transaction{} = transaction, attrs) do
-    transaction
-    |> Transaction.changeset(attrs)
-    |> Repo.update()
-  end
+    def update_transaction(%Transaction{} = transaction, attrs) do
+      transaction
+      |> Repo.preload(:tags)   # primeiro carrega as tags
+      |> Transaction.changeset(attrs)  # depois cria o changeset
+      |> Ecto.Changeset.put_assoc(:tags, get_tags_from_ids(attrs["tag_ids"])) # associa as tags
+      |> Repo.update()
+    end
+
+    defp get_tags_from_ids(nil), do: []
+    defp get_tags_from_ids(ids) do
+      Repo.all(from t in PhoenixAv3.Finance.Tag, where: t.id in ^ids)
+    end
 
   @doc """
   Deletes a transaction.

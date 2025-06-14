@@ -18,7 +18,6 @@ const TransactionList: React.FC = () => {
       setTransacoes(data);
       setErro(null);
     } catch (error) {
-      setErro('Erro ao carregar transações. Tente novamente mais tarde.');
       console.error('Erro ao buscar transações:', error);
     } finally {
       setCarregando(false);
@@ -77,12 +76,6 @@ const TransactionList: React.FC = () => {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-white">Transações</h2>
-        <button
-          onClick={handleAdd}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors duration-200"
-        >
-          Nova Transação
-        </button>
       </div>
 
       {transacoes.length === 0 ? (

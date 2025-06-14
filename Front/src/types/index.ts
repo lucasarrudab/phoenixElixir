@@ -1,5 +1,3 @@
-// Types for the application
-
 export enum ViewType {
   USUARIO = 'usuario',
   TRANSACAO = 'transacao',
@@ -33,4 +31,22 @@ export interface Tag {
   nome: string;
   inserted_at?: string;
   updated_at?: string;
+}
+
+export interface AuthUser {
+  id: number;
+  nome: string;
+  email: string;
+  token: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  senha: string;
+}
+
+export interface RegisterData {
+  nome: string;
+  email: string;
+  senha: string;
 }
